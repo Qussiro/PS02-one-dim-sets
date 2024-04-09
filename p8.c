@@ -79,12 +79,41 @@ MNOZINA* mIntersection(MNOZINA *A, MNOZINA *B) {
     return result;
 }
 
-MNOZINA mUnion(MNOZINA *A, MNOZINA *B) {
+MNOZINA* mUnion(MNOZINA *A, MNOZINA *B) {
+    MNOZINA *result = init(A->size + B->size); // Max possible size
+    int ind = 0; 
+	
+	// `A` elements
+    for (int i = 0; i < A->size; i++) {
+        result->arr[ind] = A->arr[i];
+        ind++;
+    }
     
+	// +`B` different elements
+    for (int i = 0; i < B->size; i++) {
+        int found = 0;
+        for (int j = 0; j < A->size; j++) {
+            if (B->arr[i] == A->arr[j]) {
+                found = 1;
+                break;
+            }
+        }
+        
+        if (!found) {
+            result->arr[ind] = B->arr[i];
+            ind++;
+            
+        }
+    }
+
+    result->size = ind;
+    result->arr = realloc(result->arr, sizeof(int) * result->size);
+    
+    return result;
 }
 
 int main(){
-    MNOZINA *M1, *M2, *M3;
+    MNOZINA *M1, *M2, *M3, *M4;
     int length_m1, length_m2;
     
     printf("Kolko cisel v 1 a 2 mnozinach: \n");
@@ -105,18 +134,19 @@ int main(){
     show(M2);
     printf("\n");
     
-    printf("\nIntersection: "); 
+    printf("\nPrienik mnozin 1 a 2: "); 
     M3 = mIntersection(M1,M2);
     show(M3);
     
-    printf("\nUnion: "); 
-    M3 = mUnion(M1,M2);
-    show(M3);
-    
+    printf("\nSpojenie mnozin 1 a 2: "); 
+    M4 = mUnion(M1,M2);
+    show(M4);
     
     printf("\n");
     destroy(M1);
     destroy(M2);
     destroy(M3);
+    destroy(M4);
+    
     return 0;
 }
