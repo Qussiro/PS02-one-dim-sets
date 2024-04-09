@@ -5,6 +5,7 @@ typedef struct {
 	int size;
 } MNOZINA;
 
+// TODO: check if allocation "prebehla dobre"
 MNOZINA* init(int size)
 {
     MNOZINA *M = (MNOZINA*)malloc(sizeof(MNOZINA));
@@ -108,8 +109,18 @@ MNOZINA* mUnion(MNOZINA *A, MNOZINA *B) {
 
     result->size = ind;
     result->arr = realloc(result->arr, sizeof(int) * result->size);
-    
     return result;
+}
+
+void addNumber(MNOZINA *M, int num) {
+    M->size++;
+    M->arr = realloc(M->arr, sizeof(int) * M->size);
+    
+    M->arr[M->size - 1] = num;
+}
+
+void removeNumber() {
+	
 }
 
 int main(){
@@ -141,6 +152,10 @@ int main(){
     printf("\nSpojenie mnozin 1 a 2: "); 
     M4 = mUnion(M1,M2);
     show(M4);
+    
+    printf("\nAdd number to 1 array: "); 
+    addNumber(M1,111);
+    show(M1);
     
     printf("\n");
     destroy(M1);
