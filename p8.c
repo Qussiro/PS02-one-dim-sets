@@ -39,7 +39,6 @@ void destroy(MNOZINA *M)
 	 free(M->arr);
 	 free(M); 
 	 M = NULL;
-	 printf("\n!! DESTROYED !!");
 }
 
 MNOZINA* mIntersection(MNOZINA *A, MNOZINA *B) {
@@ -138,50 +137,30 @@ void removeNumber() {
 	
 }
 
-int main(){
-    MNOZINA *M1, *M2, *M3, *M4;
-    int length_m1, length_m2;
-    
-    printf("Kolko cisel v 1 a 2 mnozinach: \n");
-    scanf("%d%d", &length_m1, &length_m2);
-    
-    M1 = init(length_m1);
-    M2 = init(length_m2);
-    
-    printf("\nNapiste %d cisel do 1 mnozine: \n", length_m1);
-    insert(M1);    
-    
-    printf("\nNapiste %d cisel do 2 mnozine: \n", length_m2);
-    insert(M2);
+void pocetToFile(int times){
+	MNOZINA *M1, *M2, *M3;
+	FILE *fptr;
 	
-	printf("\nMnozina 1: ");  
-    show(M1);
-    printf("\nMnozina 2: "); 
-    show(M2);
-    printf("\n");
-    
-    printf("\nPrienik mnozin 1 a 2: "); 
-    M3 = mIntersection(M1,M2);
-    show(M3);
-    
-    printf("\nSpojenie mnozin 1 a 2: "); 
-    M4 = mUnion(M1,M2);
-    show(M4);
-    
-    printf("\nAdd number to 1 array: "); 
-    addNumber(M1,111);
-    show(M1);
-    
-    printf("\nNahodna mnozina s 10 prvkami: "); 
-    show(mRand(10));
-    
-    printf("\nPocet porovnania: %d", pocet_porovnania); 
-    
-    printf("\n");
+	fptr = fopen("pocty.txt", "w");
+	
+	for(int i = 0; i < times; i++){
+		M1 = mRand(i);
+    	M2 = mRand(i);
+    	M3 = mIntersection(M1,M2);
+    	M3 = mUnion(M1,M2);
+    	
+    	printf("\nPocet porovnania %d: %d", i, pocet_porovnania); 
+    	fprintf(fptr, "%d\n", pocet_porovnania);
+    	pocet_porovnania = 0;
+	}
     destroy(M1);
     destroy(M2);
-    destroy(M3);
-    destroy(M4);
+    
+	fclose(fptr);
+}
+int main(){
+    pocetToFile(50);
+    printf("\n");
     
     return 0;
 }
