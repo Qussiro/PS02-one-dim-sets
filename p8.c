@@ -1,4 +1,5 @@
 #include<stdio.h>
+int pocet_porovnania = 0;
 
 typedef struct {
 	int *arr;
@@ -41,28 +42,9 @@ void destroy(MNOZINA *M)
 	 printf("\n!! DESTROYED !!");
 }
 
-//void selectionSort(int arr[], int n) 
-//{ 
-//    int min_idx; 
-//    
-//    for (int i = 0; i < n - 1; i++) { 
-//        min_idx = i; 
-//        
-//        for (int j = i + 1; j < n; j++) { 
-//            if (arr[j] < arr[min_idx]) 
-//                min_idx = j; 
-//        } 
-//        
-//        if (min_idx != i) {
-//        	int temp = arr[min_idx];
-//        	arr[min_idx] = arr[i];
-//        	arr[i] = temp;
-//		}
-//    } 
-//} 
-
 MNOZINA* mIntersection(MNOZINA *A, MNOZINA *B) {
     MNOZINA *result = init((A->size < B->size ? A->size : B->size)); // CHeck smaller size
+    pocet_porovnania++;
     int ind = 0;
 
     for (int i = 0; i < A->size; i++) {
@@ -70,10 +52,13 @@ MNOZINA* mIntersection(MNOZINA *A, MNOZINA *B) {
             if (A->arr[i] == B->arr[j]) {
                 result->arr[ind] = A->arr[i];
                 ind++;
+                pocet_porovnania++;
                 
                 break; 
             }
+            pocet_porovnania++;
         }
+        pocet_porovnania++;
     }
     
     result->size = ind;
@@ -88,6 +73,7 @@ MNOZINA* mUnion(MNOZINA *A, MNOZINA *B) {
     for (int i = 0; i < A->size; i++) {
         result->arr[ind] = A->arr[i];
         ind++;
+        pocet_porovnania++;
     }
     
 	// +`B` different elements
@@ -96,8 +82,10 @@ MNOZINA* mUnion(MNOZINA *A, MNOZINA *B) {
         for (int j = 0; j < A->size; j++) {
             if (B->arr[i] == A->arr[j]) {
                 found = 1;
+                pocet_porovnania++;
                 break;
             }
+            pocet_porovnania++;
         }
         
         if (!found) {
@@ -105,11 +93,38 @@ MNOZINA* mUnion(MNOZINA *A, MNOZINA *B) {
             ind++;
             
         }
+        pocet_porovnania++;
     }
 
     result->size = ind;
     result->arr = realloc(result->arr, sizeof(int) * result->size);
     return result;
+}
+
+MNOZINA* mRand(int size){
+	MNOZINA *result = init(size);
+	
+	for (int i = 0; i < result->size; i++) {
+        int same;
+        
+        do
+        {
+            same = 0;
+            
+			// idk about the boundaries of rand numbers
+            result->arr[i] = rand() % (size+10) + 1;
+            
+            for (int j = 0; j < i; j++) {
+                if (result->arr[j] == result->arr[i])
+                {
+                    same = 1;
+                    break;
+                }
+            }
+        } while (same);
+    }
+	
+	return result;
 }
 
 void addNumber(MNOZINA *M, int num) {
@@ -156,6 +171,11 @@ int main(){
     printf("\nAdd number to 1 array: "); 
     addNumber(M1,111);
     show(M1);
+    
+    printf("\nNahodna mnozina s 10 prvkami: "); 
+    show(mRand(10));
+    
+    printf("\nPocet porovnania: %d", pocet_porovnania); 
     
     printf("\n");
     destroy(M1);
